@@ -104,6 +104,34 @@ Password: worker123
 
 ---
 
+## 📸 Screenshots
+
+### Dashboard
+![Dashboard](./docs/screenshots/dashboard.png)
+*Vista del dashboard con estadísticas en tiempo real y proyectos recientes*
+
+### Gestión de Proyectos
+![Proyectos](./docs/screenshots/projects.png)
+*Lista de proyectos con filtros y búsqueda avanzada*
+
+### Detalle de Proyecto
+![Detalle Proyecto](./docs/screenshots/project-detail.png)
+*Vista detallada de un proyecto con galería de imágenes y comentarios*
+
+### Galería de Imágenes
+![Galería](./docs/screenshots/gallery.png)
+*Galería global con lightbox y filtros por proyecto*
+
+### Gestión de Usuarios
+![Usuarios](./docs/screenshots/users.png)
+*Administración de usuarios con roles y permisos*
+
+### Login
+![Login](./docs/screenshots/login.png)
+*Página de inicio de sesión con diseño moderno*
+
+---
+
 ## 🛠️ Stack Tecnológico
 
 ### Frontend
