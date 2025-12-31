@@ -30,7 +30,8 @@
       "Bash(git remote add:*)",
       "Bash(git push:*)",
       "Bash(git commit:*)",
-      "Bash(taskkill:*)"
+      "Bash(taskkill:*)",
+      "Bash(npm show:*)"
     ]
   }
 }
