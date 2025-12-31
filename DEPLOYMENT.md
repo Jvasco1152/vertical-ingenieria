@@ -1,5 +1,20 @@
 # Guía de Deployment - Vertical Ingeniería
 
+## ✅ Deployment Exitoso en Producción
+
+**URL en vivo:** [https://vertical-ingenieria.vercel.app](https://vertical-ingenieria.vercel.app)
+
+**Stack en Producción:**
+- **Frontend/Backend:** Vercel
+- **Base de Datos:** Supabase (PostgreSQL)
+- **Imágenes:** Cloudinary
+- **Framework:** Next.js 15.5.9
+- **React:** 18.3.1
+
+**Fecha de deployment:** 2025-12-31
+
+---
+
 ## Deployment en Vercel (Recomendado)
 
 Vercel es la plataforma creada por el equipo de Next.js y ofrece el mejor soporte para aplicaciones Next.js.
@@ -258,6 +273,219 @@ pm2 restart vertical
 1. Apunta el DNS A record a la IP de tu servidor
 2. Configura Nginx/Apache según tu dominio
 3. Instala SSL con certbot
+
+---
+
+## 🔧 Experiencia Real de Deployment (Problemas y Soluciones)
+
+Esta sección documenta los problemas reales encontrados durante el deployment de este proyecto y cómo se resolvieron.
+
+### Problema 1: Routes Manifest Error con Next.js 16.1.1
+
+**Error:**
+```
+Error: The file "/vercel/path0/q/routes-manifest.json" couldn't be found.
+This is often caused by a misconfiguration in your project.
+```
+
+**Causa:** Next.js 16.1.1 tiene incompatibilidades conocidas con la plataforma de deployment de Vercel.
+
+**Intentos fallidos:**
+1. ❌ Crear `vercel.json` con configuración custom
+2. ❌ Agregar `output: 'standalone'` en `next.config.ts`
+
+**Solución exitosa:**
+- Downgrade a Next.js 15.5.9
+- Esto también requirió downgrade de React 19 a React 18.3.1
+
+```bash
+npm install next@15.5.9 react@18.3.1 react-dom@18.3.1 eslint-config-next@15.5.9
+```
+
+---
+
+### Problema 2: React 19 Incompatible con Next.js 15
+
+**Error:**
+```
+npm error Could not resolve dependency:
+npm error peer react@"^18.2.0 || 19.0.0-rc-66855b96-20241106" from next@15.0.3
+```
+
+**Causa:** Next.js 15 no soporta completamente React 19.
+
+**Solución:**
+```bash
+npm install react@^18.3.1 react-dom@^18.3.1
+npm install @types/react@^18.3.18 @types/react-dom@^18.3.5
+```
+
+---
+
+### Problema 3: ESLint Error Bloqueando Build
+
+**Error:**
+```
+./app/api/dashboard/stats/route.ts
+24:9  Error: 'projectFilter' is never reassigned. Use 'const' instead.  prefer-const
+```
+
+**Causa:** Next.js 15 tiene reglas de ESLint más estrictas que bloquean el build.
+
+**Solución:** Cambiar declaración de variable en `app/api/dashboard/stats/route.ts:24`
+```typescript
+// Antes:
+let projectFilter: any = {};
+
+// Después:
+const projectFilter: any = {};
+```
+
+---
+
+### Problema 4: CVE-2025-66478 Security Vulnerability
+
+**Error:**
+```
+Error: Vulnerable version of Next.js detected, please update immediately.
+Learn More: https://vercel.link/CVE-2025-66478
+```
+
+**Causa:** Next.js versiones 15.0.3 hasta 15.5.8 contienen una vulnerabilidad de seguridad.
+
+**Solución:** Upgrade a Next.js 15.5.9 (versión parchada)
+```bash
+npm install next@15.5.9 eslint-config-next@15.5.9
+```
+
+**Verificación:**
+```bash
+npm audit
+# found 0 vulnerabilities
+```
+
+---
+
+### Problema 5: Prisma db push Colgado con pgbouncer
+
+**Síntoma:** El comando `npx prisma db push` se cuelga indefinidamente.
+
+**Causa:** Connection pooler (pgbouncer) de Supabase en puerto 6543 no es compatible con operaciones de migración de Prisma.
+
+**Solución:** Usar dos connection strings diferentes:
+
+**Para migraciones (.env):**
+```env
+# Puerto 5432 - Conexión directa SIN pgbouncer
+DATABASE_URL="postgresql://postgres.xxx:password@aws-1-sa-east-1.pooler.supabase.com:5432/postgres"
+```
+
+**Para la aplicación (.env.local y Vercel):**
+```env
+# Puerto 6543 - Conexión con pooling CON pgbouncer
+DATABASE_URL="postgresql://postgres.xxx:password@aws-1-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+```
+
+**Comandos:**
+```bash
+# Migraciones (usar .env con puerto 5432)
+npx prisma db push
+
+# Seed (usar .env con puerto 5432)
+npm run db:seed
+```
+
+---
+
+### Problema 6: Credenciales de Prueba Incorrectas
+
+**Síntoma:** Las credenciales documentadas inicialmente no funcionaban.
+
+**Causa:** La documentación inicial mostraba contraseñas incorrectas (ej: `admin123`, `worker123`) cuando el seed real usa `password123` para todos los usuarios.
+
+**Solución:** Actualizar toda la documentación con las credenciales correctas del archivo `prisma/seed.ts`:
+- Todos los usuarios usan: `password123`
+
+---
+
+## 📋 Checklist de Deployment Verificado
+
+Este es el checklist que se siguió para el deployment exitoso:
+
+- [x] Variables de entorno configuradas en Vercel
+- [x] Base de datos Supabase creada y accesible
+- [x] NEXTAUTH_SECRET generado (usando https://generate-secret.vercel.app/32)
+- [x] NEXTAUTH_URL apunta a https://vertical-ingenieria.vercel.app
+- [x] Cloudinary configurado con credenciales correctas
+- [x] Migraciones ejecutadas con conexión directa (puerto 5432)
+- [x] Seed ejecutado con datos de prueba
+- [x] Build local exitoso sin errores
+- [x] Next.js 15.5.9 (versión segura sin CVE)
+- [x] React 18.3.1 (compatible con Next.js 15)
+- [x] ESLint configurado correctamente
+- [x] Deployment exitoso en Vercel
+- [x] Aplicación funcionando en producción
+
+---
+
+## 🎯 Recomendaciones Basadas en Experiencia
+
+### 1. Versiones de Dependencias
+
+**Usar estas versiones verificadas:**
+```json
+{
+  "dependencies": {
+    "next": "^15.5.9",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "@prisma/client": "^6.19.1",
+    "next-auth": "^4.24.13"
+  },
+  "devDependencies": {
+    "prisma": "^6.19.1",
+    "eslint-config-next": "^15.5.9",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5"
+  }
+}
+```
+
+### 2. Supabase Database URLs
+
+Siempre mantener DOS variables:
+- Puerto 5432 (directo) para migraciones
+- Puerto 6543 (pooling) para la aplicación
+
+### 3. Next.js Versions
+
+❌ **Evitar:**
+- Next.js 16.x (incompatible con Vercel actualmente)
+- React 19 (incompatible con Next.js 15)
+- Next.js 15.0.3 - 15.5.8 (tienen CVE-2025-66478)
+
+✅ **Usar:**
+- Next.js 15.5.9 o superior
+- React 18.3.1
+- ESLint strict mode enabled
+
+### 4. Build Local Primero
+
+Siempre probar el build localmente antes de deployar:
+```bash
+npm run build
+```
+
+Si hay errores, no deployar hasta resolverlos.
+
+### 5. Verificar Seguridad
+
+Antes de cada deploy:
+```bash
+npm audit
+```
+
+Resolver todas las vulnerabilidades críticas.
 
 ## Optimizaciones Post-Deployment
 

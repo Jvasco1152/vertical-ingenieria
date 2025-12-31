@@ -8,13 +8,22 @@
 
 ## ✅ Estado Actual del Proyecto (Actualizado 2025-12-31)
 
+### 🚀 Deployment en Producción
+- [x] **Aplicación desplegada en Vercel:** [https://vertical-ingenieria.vercel.app](https://vertical-ingenieria.vercel.app)
+- [x] Base de datos PostgreSQL en Supabase
+- [x] Variables de entorno configuradas en Vercel
+- [x] Deployment automático desde GitHub
+- [x] Next.js 15.5.9 (versión segura sin CVE-2025-66478)
+- [x] React 18.3.1 (compatible con Next.js 15)
+
 ### Infraestructura Base
-- [x] Proyecto Next.js 16.1.1 con TypeScript configurado
+- [x] Proyecto Next.js 15.5.9 con TypeScript configurado
+- [x] React 18.3.1 configurado
 - [x] Tailwind CSS 4.1.18 configurado (@tailwindcss/postcss)
 - [x] Estructura de carpetas organizada
 - [x] Variables de entorno configuradas (.env.local y .env)
 - [x] Build exitoso sin errores
-- [x] PostgreSQL 18 instalado y configurado localmente
+- [x] PostgreSQL en Supabase configurado y conectado
 
 ### Base de Datos (Prisma 6.19.1 + PostgreSQL 18)
 - [x] Schema completo de Prisma creado
@@ -227,9 +236,11 @@
 ## 🔧 Configuración Técnica Importante
 
 ### Variables de Entorno Configuradas
+
+**Desarrollo Local (.env.local):**
 ```env
-# Database
-DATABASE_URL="postgresql://postgres:3430024Juan@localhost:5432/vertical_db"
+# Database - Supabase
+DATABASE_URL="postgresql://postgres.tlsybwdkzoclltwvetml:oehgwv1cMDkUvi3t@aws-1-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
 
 # NextAuth
 NEXTAUTH_SECRET="vertical-ingenieria-secret-key-2024"
@@ -241,7 +252,30 @@ CLOUDINARY_API_KEY="365675144951949"
 CLOUDINARY_API_SECRET="kAx6nYattBoQssfwj48_ycAeHGM"
 ```
 
-**Nota:** Las variables están en `.env.local` (Next.js) y `.env` (Prisma)
+**Producción (Vercel):**
+```env
+# Database - Supabase con pooling
+DATABASE_URL="postgresql://postgres.tlsybwdkzoclltwvetml:oehgwv1cMDkUvi3t@aws-1-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+
+# NextAuth
+NEXTAUTH_SECRET="<generado-con-openssl>"
+NEXTAUTH_URL="https://vertical-ingenieria.vercel.app"
+
+# Cloudinary
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="dwcejjfli"
+CLOUDINARY_API_KEY="365675144951949"
+CLOUDINARY_API_SECRET="kAx6nYattBoQssfwj48_ycAeHGM"
+```
+
+**Para Migraciones (.env):**
+```env
+# Usar conexión directa (puerto 5432) para prisma db push
+DATABASE_URL="postgresql://postgres.tlsybwdkzoclltwvetml:oehgwv1cMDkUvi3t@aws-1-sa-east-1.pooler.supabase.com:5432/postgres"
+```
+
+**Nota:**
+- Usar puerto **6543 con pgbouncer** para la aplicación (development y production)
+- Usar puerto **5432 sin pgbouncer** para migraciones de Prisma
 
 ### Comandos Importantes
 ```bash
@@ -265,11 +299,13 @@ rm -rf .next && npm run build
 ```
 
 ### Base de Datos Configurada
-- **Motor:** PostgreSQL 18
-- **Host:** localhost:5432
-- **Nombre DB:** vertical_db
-- **Usuario:** postgres
-- **Estado:** ✅ Instalada, migrada y con datos de prueba
+- **Motor:** PostgreSQL (Supabase)
+- **Host:** aws-1-sa-east-1.pooler.supabase.com
+- **Puertos:**
+  - 6543 (pooling con pgbouncer) - Para aplicación
+  - 5432 (conexión directa) - Para migraciones
+- **Nombre DB:** postgres
+- **Estado:** ✅ Desplegada en Supabase, migrada y con datos de prueba
 
 ## 📊 Modelos de Base de Datos Principales
 
@@ -299,19 +335,22 @@ rm -rf .next && npm run build
 
 ## 🎯 Decisiones Técnicas Tomadas
 
-1. **Next.js 16.1.1 con App Router** (no Pages Router)
-2. **Tailwind CSS 4.1.18** con @tailwindcss/postcss
-3. **Prisma 6.19.1** como ORM
-4. **NextAuth 4.24.13** para autenticación
-5. **Cloudinary** para imágenes (signed upload)
-6. **PostgreSQL 18 local** (producción: migrar a Supabase)
-7. **bcryptjs** para hash de contraseñas
-8. **Zod 4.2.1** para validación
-9. **React Hot Toast 2.6.0** para notificaciones
-10. **Diseño Moderno Minimalista** - Gradientes, shadows sutiles, hover effects
+1. **Next.js 15.5.9 con App Router** (downgrade de 16.1.1 por compatibilidad con Vercel)
+2. **React 18.3.1** (downgrade de 19 por compatibilidad con Next.js 15)
+3. **Tailwind CSS 4.1.18** con @tailwindcss/postcss
+4. **Prisma 6.19.1** como ORM
+5. **NextAuth 4.24.13** para autenticación
+6. **Cloudinary** para imágenes (signed upload)
+7. **PostgreSQL en Supabase** con connection pooling (pgbouncer)
+8. **bcryptjs** para hash de contraseñas
+9. **Zod 4.2.1** para validación
+10. **React Hot Toast 2.6.0** para notificaciones
+11. **Diseño Moderno Minimalista** - Gradientes, shadows sutiles, hover effects
+12. **Vercel** para hosting con deployment automático desde GitHub
 
 ## 🐛 Problemas Resueltos
 
+### Desarrollo
 1. ✅ Tailwind CSS v4 requiere @tailwindcss/postcss
 2. ✅ next.config.ts deprecation de images.domains
 3. ✅ Middleware deprecated en Next.js 16
@@ -325,6 +364,14 @@ rm -rf .next && npm run build
 11. ✅ bcrypt vs bcryptjs - Usando bcryptjs
 12. ✅ ProjectImage uploadedBy relation - Ajustado a String
 13. ✅ Turbopack cache issues - Limpiar .next
+
+### Deployment en Vercel
+14. ✅ **Routes manifest error con Next.js 16.1.1** - Downgrade a Next.js 15.5.9
+15. ✅ **React 19 incompatible con Next.js 15** - Downgrade a React 18.3.1
+16. ✅ **ESLint error bloqueando build** - Cambio de `let` a `const` en projectFilter
+17. ✅ **CVE-2025-66478 en Next.js 15.1.3** - Upgrade a Next.js 15.5.9 (versión segura)
+18. ✅ **Prisma db push colgado con pgbouncer** - Usar puerto 5432 para migraciones
+19. ✅ **Supabase connection pooling** - Puerto 6543 para app, 5432 para migraciones
 
 ## 📝 Próximos Pasos Recomendados
 
@@ -363,20 +410,24 @@ rm -rf .next && npm run build
 
 ## 🎨 Credenciales de Prueba
 
+**Aplicación en Vivo:** [https://vertical-ingenieria.vercel.app](https://vertical-ingenieria.vercel.app)
+
 **Admin:**
 - Email: `admin@vertical.com`
 - Password: `password123`
 - Rol: ADMIN (acceso completo)
 
-**Worker:**
-- Email: `maria@vertical.com`
-- Password: `password123`
+**Workers:**
+- Email: `carlos@vertical.com` / Password: `password123`
+- Email: `ana@vertical.com` / Password: `password123`
 - Rol: WORKER (puede gestionar proyectos asignados)
 
-**Client:**
-- Email: `carlos@empresa.com`
-- Password: `password123`
+**Clientes:**
+- Email: `juan@cliente.com` / Password: `password123`
+- Email: `maria@cliente.com` / Password: `password123`
 - Rol: CLIENT (solo ve sus proyectos)
+
+> **Nota:** Todos los usuarios usan la contraseña `password123`
 
 ## 💡 Ideas Futuras
 
@@ -413,8 +464,10 @@ rm -rf .next && npm run build
 - **Gestión de Usuarios:** 100% ✅
 - **Gestión de Clientes:** 100% ✅
 - **Galería:** 100% ✅
+- **Deployment:** 100% ✅
 
-**Progreso general del MVP: ~90%** ✅
+**Progreso general del MVP: 100%** ✅
+**Estado:** ✅ **DESPLEGADO EN PRODUCCIÓN**
 
 ### 🎯 Funcionalidades Core Completadas
 
@@ -444,4 +497,6 @@ rm -rf .next && npm run build
 
 **Última actualización:** 2025-12-31
 **Versión del proyecto:** 1.0.0
-**Estado:** ✅ **MVP COMPLETADO** - Sistema funcional listo para uso en producción
+**Estado:** ✅ **DESPLEGADO EN PRODUCCIÓN**
+**URL:** [https://vertical-ingenieria.vercel.app](https://vertical-ingenieria.vercel.app)
+**Stack:** Next.js 15.5.9 + React 18.3.1 + PostgreSQL (Supabase) + Vercel

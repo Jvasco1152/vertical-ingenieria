@@ -1,10 +1,12 @@
 # Vertical Ingeniería - Sistema de Gestión de Proyectos
 
-[![Next.js](https://img.shields.io/badge/Next.js-16.1.1-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-15.5.9-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-18.3.1-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![Prisma](https://img.shields.io/badge/Prisma-6.19.1-2D3748?style=for-the-badge&logo=prisma)](https://www.prisma.io/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-18-316192?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Supabase-316192?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1.18-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+[![Vercel](https://img.shields.io/badge/Deployed-Vercel-000000?style=for-the-badge&logo=vercel)](https://vertical-ingenieria.vercel.app)
 [![License](https://img.shields.io/badge/License-Proprietary-red?style=for-the-badge)](LICENSE)
 
 Sistema web profesional para la gestión de proyectos de diseño de interiores para ascensores. Permite el seguimiento en tiempo real del progreso mediante fotos, comentarios y actualizaciones, con roles diferenciados para administradores, trabajadores y clientes.
@@ -80,27 +82,37 @@ Sistema web profesional para la gestión de proyectos de diseño de interiores p
 
 ---
 
-## 🎯 Demo
+## 🎯 Demo en Vivo
+
+🚀 **Aplicación desplegada:** [https://vertical-ingenieria.vercel.app](https://vertical-ingenieria.vercel.app)
+
+### Credenciales de Prueba
 
 **Usuario Administrador:**
 ```
 Email: admin@vertical.com
-Password: admin123
+Password: password123
 ```
 
-**Usuario Cliente:**
+**Usuarios Trabajadores:**
 ```
-Email: cliente@example.com
-Password: cliente123
+Email: carlos@vertical.com
+Password: password123
+
+Email: ana@vertical.com
+Password: password123
 ```
 
-**Usuario Trabajador:**
+**Usuarios Clientes:**
 ```
-Email: worker@vertical.com
-Password: worker123
+Email: juan@cliente.com
+Password: password123
+
+Email: maria@cliente.com
+Password: password123
 ```
 
-> **Nota**: Estos son usuarios de prueba creados con el seed inicial
+> **Nota**: Estos son usuarios de prueba creados con el seed inicial. Todos usan la misma contraseña: `password123`
 
 ---
 
@@ -135,27 +147,29 @@ Password: worker123
 ## 🛠️ Stack Tecnológico
 
 ### Frontend
-- **Next.js 16.1.1** - Framework React con App Router
-- **TypeScript** - Tipado estático
+- **Next.js 15.5.9** - Framework React con App Router (versión segura, sin CVE)
+- **React 18.3.1** - Biblioteca UI
+- **TypeScript 5.9.3** - Tipado estático
 - **Tailwind CSS 4.1.18** - Estilos utility-first
-- **Lucide React** - Iconos modernos
-- **React Hot Toast** - Notificaciones toast
+- **Lucide React 0.562.0** - Iconos modernos
+- **React Hot Toast 2.6.0** - Notificaciones toast
 
 ### Backend
 - **Next.js API Routes** - Endpoints REST
-- **NextAuth 4.24.13** - Autenticación
+- **NextAuth 4.24.13** - Autenticación con JWT
 - **Prisma 6.19.1** - ORM para base de datos
-- **bcryptjs** - Hashing de contraseñas
+- **bcryptjs 3.0.3** - Hashing de contraseñas
 - **Zod 4.2.1** - Validación de esquemas
 
-### Base de Datos
-- **PostgreSQL 18** - Base de datos relacional
+### Base de Datos y Hosting
+- **PostgreSQL (Supabase)** - Base de datos en la nube
+- **Vercel** - Hosting y deployment automático
 
 ### Almacenamiento
 - **Cloudinary** - CDN para imágenes
 
 ### Herramientas de Desarrollo
-- **ESLint** - Linter
+- **ESLint 9.39.2** - Linter
 - **TypeScript** - Type checking
 - **Prisma Studio** - GUI para base de datos
 
@@ -392,42 +406,63 @@ npm run test:cloudinary  # Probar conexión a Cloudinary
 
 ## 🚢 Deployment
 
-### Vercel (Recomendado)
+### ✅ Aplicación en Producción
+
+**URL:** [https://vertical-ingenieria.vercel.app](https://vertical-ingenieria.vercel.app)
+
+La aplicación está actualmente desplegada en Vercel con:
+- **Frontend/Backend:** Vercel
+- **Base de Datos:** Supabase (PostgreSQL)
+- **Imágenes:** Cloudinary
+- **Stack:** Next.js 15.5.9 + React 18.3.1
+
+### Deployment en Vercel (Recomendado)
 
 1. **Conectar repositorio**
    - Ve a [vercel.com](https://vercel.com)
-   - Importa tu repositorio de GitHub
+   - Importa tu repositorio de GitHub: [Jvasco1152/vertical-ingenieria](https://github.com/Jvasco1152/vertical-ingenieria)
    - Selecciona el proyecto
 
 2. **Configurar variables de entorno**
-   - Agrega todas las variables de `.env.local`
-   - `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, etc.
+   Agrega las siguientes variables en Vercel:
+   ```env
+   DATABASE_URL="postgresql://postgres.xxx:password@aws-1-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+   NEXTAUTH_SECRET="genera-con-openssl-rand-base64-32"
+   NEXTAUTH_URL="https://tu-dominio.vercel.app"
+   NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="dwcejjfli"
+   CLOUDINARY_API_KEY="365675144951949"
+   CLOUDINARY_API_SECRET="kAx6nYattBoQssfwj48_ycAeHGM"
+   ```
 
-3. **Deploy**
-   - Click en "Deploy"
-   - Vercel automáticamente detecta Next.js y lo configura
+3. **Configurar Base de Datos en Supabase**
+   - Crea proyecto en [supabase.com](https://supabase.com)
+   - Ve a Settings → Database → Connection string
+   - Usa la conexión con **pooling (puerto 6543)** para Vercel
+   - Usa la conexión **directa (puerto 5432)** para migraciones
 
-4. **Configurar Base de Datos**
-   - Usa [Supabase](https://supabase.com) o [Neon](https://neon.tech)
-   - Copia la URL de conexión a `DATABASE_URL`
-   - Ejecuta: `npx prisma db push`
+4. **Ejecutar migraciones**
+   ```bash
+   # Usa conexión directa (puerto 5432) para migraciones
+   DATABASE_URL="postgresql://...5432/postgres" npx prisma db push
+   DATABASE_URL="postgresql://...5432/postgres" npm run db:seed
+   ```
 
-### Variables de Entorno en Producción
+5. **Deploy automático**
+   - Vercel detecta Next.js automáticamente
+   - Cada push a `main` despliega automáticamente
 
-```env
-DATABASE_URL="postgresql://..."
-NEXTAUTH_SECRET="tu-secret-de-produccion"
-NEXTAUTH_URL="https://tu-dominio.vercel.app"
-NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="..."
-CLOUDINARY_API_KEY="..."
-CLOUDINARY_API_SECRET="..."
-```
+### ⚠️ Notas Importantes
 
-### Servicios Recomendados
+- **Versión de Next.js:** Usa Next.js 15.5.9 (no 16.x) para evitar problemas con Vercel
+- **React 18:** Requerido para Next.js 15
+- **Supabase Pooling:** Usa puerto 6543 con `?pgbouncer=true` en producción
+- **Migraciones:** Siempre usa puerto 5432 (conexión directa) para `prisma db push`
 
-- **Hosting**: [Vercel](https://vercel.com) - Deploy automático
-- **Base de Datos**: [Supabase](https://supabase.com) o [Neon](https://neon.tech)
-- **Imágenes**: [Cloudinary](https://cloudinary.com) - CDN gratuito
+### Servicios Utilizados
+
+- **Hosting:** [Vercel](https://vercel.com) - Deploy automático con GitHub
+- **Base de Datos:** [Supabase](https://supabase.com) - PostgreSQL gratuito
+- **Imágenes:** [Cloudinary](https://cloudinary.com) - CDN gratuito
 
 ---
 
