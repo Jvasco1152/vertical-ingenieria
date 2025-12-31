@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest . --typescript --tailwind --app --no-src-dir --import-alias \"@/*\" --eslint)",
+      "Bash(npm init -y)",
+      "Bash(npm install:*)",
+      "Bash(npx tailwindcss init -p)",
+      "Bash(npx prisma generate:*)",
+      "Bash(tree:*)",
+      "Bash(cat:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run db:push:*)",
+      "Bash(set:*)",
+      "Bash(npx prisma db push:*)",
+      "Bash(npm run db:seed:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npx prisma db execute:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(npx tsx:*)",
+      "Bash(curl:*)",
+      "Bash(npx tsc:*)",
+      "Bash(del:*)",
+      "Bash(if exist .next rmdir /s /q .next)",
+      "Bash(dir C:UsersTorreDesktopaplicacionesverticalappusers)",
+      "Bash(git init:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}

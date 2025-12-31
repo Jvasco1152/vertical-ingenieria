@@ -1,0 +1,151 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  WORKER
+  CLIENT
+}
+
+enum ProjectStatus {
+  PENDING       // Pendiente de iniciar
+  IN_PROGRESS   // En progreso
+  PAUSED        // Pausado
+  COMPLETED     // Completado
+  CANCELLED     // Cancelado
+}
+
+enum ProjectPhase {
+  MEASUREMENT   // Medición
+  DESIGN        // Diseño
+  APPROVAL      // Aprobación
+  INSTALLATION  // Instalación
+  FINISHING     // Acabados
+  DELIVERY      // Entrega
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  password      String
+  phone         String?
+  role          UserRole  @default(CLIENT)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relaciones
+  projectsAsClient    Project[]      @relation("ClientProjects")
+  projectsAsWorker    ProjectWorker[]
+  comments            Comment[]
+  notifications       Notification[]
+
+  @@map("users")
+}
+
+model Project {
+  id              String         @id @default(cuid())
+  title           String
+  description     String
+  location        String
+  clientId        String
+  status          ProjectStatus  @default(PENDING)
+  currentPhase    ProjectPhase   @default(MEASUREMENT)
+  progress        Int            @default(0) // 0-100%
+  startDate       DateTime?
+  estimatedEndDate DateTime?
+  actualEndDate   DateTime?
+  budget          Float?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  // Relaciones
+  client          User           @relation("ClientProjects", fields: [clientId], references: [id], onDelete: Cascade)
+  workers         ProjectWorker[]
+  images          ProjectImage[]
+  comments        Comment[]
+  phases          ProjectPhaseLog[]
+  notifications   Notification[]
+
+  @@map("projects")
+}
+
+model ProjectWorker {
+  id         String   @id @default(cuid())
+  projectId  String
+  workerId   String
+  assignedAt DateTime @default(now())
+
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  worker     User     @relation(fields: [workerId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, workerId])
+  @@map("project_workers")
+}
+
+model ProjectImage {
+  id          String       @id @default(cuid())
+  projectId   String
+  url         String
+  publicId    String?      // Para Cloudinary
+  description String?
+  phase       ProjectPhase
+  uploadedBy  String
+  createdAt   DateTime     @default(now())
+
+  project     Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("project_images")
+}
+
+model ProjectPhaseLog {
+  id          String       @id @default(cuid())
+  projectId   String
+  phase       ProjectPhase
+  startedAt   DateTime     @default(now())
+  completedAt DateTime?
+  notes       String?
+
+  project     Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("project_phase_logs")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  projectId String
+  userId    String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("comments")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  projectId String?
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
