@@ -21,7 +21,7 @@ export async function GET(req: Request) {
     const firstDayCurrentMonthLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
 
     // Construir filtros según el rol del usuario
-    let projectFilter: any = {};
+    const projectFilter: any = {};
 
     if (session.user.role === 'CLIENT') {
       projectFilter.clientId = session.user.id;
