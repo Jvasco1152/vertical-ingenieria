@@ -135,6 +135,35 @@ model Comment {
   @@map("comments")
 }
 
+enum QuoteStatus {
+  PENDING    // Pendiente
+  REVIEWED   // Revisada
+  CONVERTED  // Convertida a proyecto
+  REJECTED   // Rechazada
+}
+
+model QuoteRequest {
+  id                    String      @id @default(cuid())
+  email                 String
+  tipoCliente           String
+  obraEdificio          String
+  direccion             String
+  ciudad                String
+  ciudadOtro            String?
+  quienSolicita         String?
+  descripcion           String
+  tipoCotizacion        String
+  nombreContacto        String?
+  telefonoContacto      String?
+  requerimientoEspecial String?
+  status                QuoteStatus @default(PENDING)
+  adminNotes            String?
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+
+  @@map("quote_requests")
+}
+
 model Notification {
   id        String   @id @default(cuid())
   userId    String

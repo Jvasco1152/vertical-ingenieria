@@ -17,12 +17,20 @@ export default function Home() {
           <p className="text-sm text-gray-500 mb-6">
             Iluminación, decoración y estilo para elevar la experiencia del usuario
           </p>
-          <Link
-            href="/login"
-            className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg transition-colors duration-200"
-          >
-            Iniciar Sesión
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link
+              href="/solicitud"
+              className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200"
+            >
+              Solicitar Cotización
+            </Link>
+            <Link
+              href="/login"
+              className="inline-block border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium px-6 py-3 rounded-lg transition-colors duration-200"
+            >
+              Iniciar Sesión
+            </Link>
+          </div>
         </div>
       </div>
     </div>

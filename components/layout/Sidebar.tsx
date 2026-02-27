@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { Home, Briefcase, Users, Settings, BarChart3, Image, X, UserCog } from 'lucide-react';
+import { Home, Briefcase, Users, Settings, BarChart3, Image, X, UserCog, ClipboardList } from 'lucide-react';
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -15,6 +15,7 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
   const { data: session } = useSession();
 
   const menuItems = [
+    { name: 'Solicitudes', href: '/solicitudes', icon: ClipboardList, adminOnly: true },
     { name: 'Dashboard', href: '/dashboard', icon: Home },
     { name: 'Proyectos', href: '/projects', icon: Briefcase },
     { name: 'Galería', href: '/gallery', icon: Image },
