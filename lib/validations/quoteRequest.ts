@@ -13,7 +13,7 @@ export const createQuoteRequestSchema = z.object({
     'Ascensores Schindler',
     'Soluciones Verticales',
     'Mitsubishi',
-  ], { required_error: 'Debe seleccionar el tipo de cliente' }),
+  ], { message: 'Debe seleccionar el tipo de cliente' }),
 
   obraEdificio: z
     .string()
@@ -35,7 +35,7 @@ export const createQuoteRequestSchema = z.object({
     'Copacabana',
     'Girardota',
     'Otro',
-  ], { required_error: 'Debe seleccionar la ciudad' }),
+  ], { message: 'Debe seleccionar la ciudad' }),
 
   ciudadOtro: z
     .string()
@@ -56,7 +56,7 @@ export const createQuoteRequestSchema = z.object({
     'Modernización completa o parcial de cabina',
     'Pintura de puertas de piso',
     'Requerimiento especial',
-  ], { required_error: 'Debe seleccionar el tipo de cotización' }),
+  ], { message: 'Debe seleccionar el tipo de cotización' }),
 
   nombreContacto: z
     .string()
