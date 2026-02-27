@@ -11,9 +11,10 @@ import { z } from 'zod';
  */
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession(authOptions);
 
     if (!session || !session.user) {
@@ -25,7 +26,7 @@ export async function GET(
     }
 
     const solicitud = await prisma.quoteRequest.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!solicitud) {
@@ -48,9 +49,10 @@ export async function GET(
  */
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession(authOptions);
 
     if (!session || !session.user) {
@@ -65,7 +67,7 @@ export async function PATCH(
     const validatedData = updateQuoteRequestSchema.parse(body);
 
     const solicitud = await prisma.quoteRequest.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         ...(validatedData.status && { status: validatedData.status }),
         ...(validatedData.adminNotes !== undefined && { adminNotes: validatedData.adminNotes }),
