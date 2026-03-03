@@ -25,6 +25,7 @@ export async function POST(req: Request) {
         quienSolicita: validatedData.quienSolicita || null,
         descripcion: validatedData.descripcion,
         tipoCotizacion: validatedData.tipoCotizacion,
+        tipoCotizacionOtro: validatedData.tipoCotizacionOtro || null,
         nombreContacto: validatedData.nombreContacto || null,
         telefonoContacto: validatedData.telefonoContacto || null,
         requerimientoEspecial: validatedData.requerimientoEspecial || null,

@@ -153,6 +153,7 @@ model QuoteRequest {
   quienSolicita         String?
   descripcion           String
   tipoCotizacion        String
+  tipoCotizacionOtro    String?
   nombreContacto        String?
   telefonoContacto      String?
   requerimientoEspecial String?

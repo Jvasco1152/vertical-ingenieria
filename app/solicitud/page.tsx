@@ -29,10 +29,11 @@ const CIUDADES = [
 ] as const;
 
 const TIPOS_COTIZACION = [
-  'Modernización completa o parcial de cabina',
-  'Cambio de cielo falso',
+  'Restauración completa y/o parcial de cabina',
+  'Solo mejora en iluminación o cambio de cielo falso',
+  'Solo cambio de piso o restauración de plataforma',
   'Pintura de puertas de piso',
-  'Requerimiento especial',
+  'Otro',
 ] as const;
 
 // Tipos de cielo falso con sus descripciones.
@@ -91,6 +92,7 @@ export default function SolicitudPage() {
   });
 
   const ciudadValue = watch('ciudad');
+  const tipoCotizacionValue = watch('tipoCotizacion');
   const tipoCieloFalsoValue = watch('tipoCieloFalso');
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -196,8 +198,8 @@ export default function SolicitudPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 py-10 px-4">
-      <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen w-full bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 flex flex-col items-center py-10 px-4">
+      <div className="w-full max-w-3xl">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-12 h-12 bg-white/20 rounded-xl mb-4">
@@ -331,20 +333,37 @@ export default function SolicitudPage() {
 
             {/* Tipo de cotización */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Tipo de cotización <span className="text-red-500">*</span>
               </label>
-              <select
-                {...register('tipoCotizacion')}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white"
-              >
-                <option value="">Seleccionar...</option>
+              <div className="space-y-2">
                 {TIPOS_COTIZACION.map((tipo) => (
-                  <option key={tipo} value={tipo}>{tipo}</option>
+                  <label key={tipo} className="flex items-start gap-2.5 cursor-pointer">
+                    <input
+                      type="radio"
+                      value={tipo}
+                      {...register('tipoCotizacion')}
+                      className="accent-blue-600 mt-0.5 shrink-0"
+                    />
+                    <span className="text-sm text-gray-700">{tipo}</span>
+                  </label>
                 ))}
-              </select>
+              </div>
               {errors.tipoCotizacion && (
                 <p className="mt-1 text-xs text-red-500">{errors.tipoCotizacion.message}</p>
+              )}
+              {tipoCotizacionValue === 'Otro' && (
+                <div className="mt-3">
+                  <input
+                    type="text"
+                    {...register('tipoCotizacionOtro')}
+                    placeholder="Especifique el tipo de cotización..."
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                  />
+                  {errors.tipoCotizacionOtro && (
+                    <p className="mt-1 text-xs text-red-500">{errors.tipoCotizacionOtro.message}</p>
+                  )}
+                </div>
               )}
             </div>
 

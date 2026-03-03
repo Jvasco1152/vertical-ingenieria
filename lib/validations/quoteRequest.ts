@@ -53,11 +53,17 @@ export const createQuoteRequestSchema = z.object({
     .max(2000, 'La descripción no puede exceder 2000 caracteres'),
 
   tipoCotizacion: z.enum([
-    'Modernización completa o parcial de cabina',
-    'Cambio de cielo falso',
+    'Restauración completa y/o parcial de cabina',
+    'Solo mejora en iluminación o cambio de cielo falso',
+    'Solo cambio de piso o restauración de plataforma',
     'Pintura de puertas de piso',
-    'Requerimiento especial',
+    'Otro',
   ], { message: 'Debe seleccionar el tipo de cotización' }),
+
+  tipoCotizacionOtro: z
+    .string()
+    .max(300, 'El campo no puede exceder 300 caracteres')
+    .optional(),
 
   nombreContacto: z
     .string()
@@ -104,6 +110,12 @@ export const createQuoteRequestSchema = z.object({
   {
     message: 'Debe especificar la ciudad',
     path: ['ciudadOtro'],
+  }
+).refine(
+  (data) => data.tipoCotizacion !== 'Otro' || (data.tipoCotizacionOtro && data.tipoCotizacionOtro.trim().length > 0),
+  {
+    message: 'Debe especificar el tipo de cotización',
+    path: ['tipoCotizacionOtro'],
   }
 );
 

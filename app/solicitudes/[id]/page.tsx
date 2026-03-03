@@ -19,6 +19,7 @@ interface QuoteRequest {
   quienSolicita: string | null;
   descripcion: string;
   tipoCotizacion: string;
+  tipoCotizacionOtro: string | null;
   nombreContacto: string | null;
   telefonoContacto: string | null;
   requerimientoEspecial: string | null;
@@ -174,7 +175,14 @@ export default function SolicitudDetailPage() {
             <Field label="Dirección" value={solicitud.direccion} />
             <Field label="Ciudad" value={ciudadDisplay} />
             <Field label="Quién solicita" value={solicitud.quienSolicita} />
-            <Field label="Tipo de cotización" value={solicitud.tipoCotizacion} />
+            <Field
+              label="Tipo de cotización"
+              value={
+                solicitud.tipoCotizacion === 'Otro' && solicitud.tipoCotizacionOtro
+                  ? `Otro: ${solicitud.tipoCotizacionOtro}`
+                  : solicitud.tipoCotizacion
+              }
+            />
             <Field label="Nombre de contacto" value={solicitud.nombreContacto} />
             <Field label="Teléfono de contacto" value={solicitud.telefonoContacto} />
           </dl>
