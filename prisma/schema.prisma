@@ -156,6 +156,12 @@ model QuoteRequest {
   nombreContacto        String?
   telefonoContacto      String?
   requerimientoEspecial String?
+  // Campos específicos para Cambio de Cielo Falso
+  anchoCabina           String?
+  fondoCabina           String?
+  tipoCieloFalso        String?
+  tipoCieloFalsoOtro    String?
+  fotosCieloFalso       String[]
   status                QuoteStatus @default(PENDING)
   adminNotes            String?
   createdAt             DateTime    @default(now())

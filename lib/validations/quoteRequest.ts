@@ -54,6 +54,7 @@ export const createQuoteRequestSchema = z.object({
 
   tipoCotizacion: z.enum([
     'Modernización completa o parcial de cabina',
+    'Cambio de cielo falso',
     'Pintura de puertas de piso',
     'Requerimiento especial',
   ], { message: 'Debe seleccionar el tipo de cotización' }),
@@ -71,6 +72,32 @@ export const createQuoteRequestSchema = z.object({
   requerimientoEspecial: z
     .string()
     .max(2000, 'El requerimiento no puede exceder 2000 caracteres')
+    .optional(),
+
+  // Campos específicos para Cambio de Cielo Falso
+  anchoCabina: z
+    .string()
+    .max(20, 'El ancho no puede exceder 20 caracteres')
+    .optional(),
+
+  fondoCabina: z
+    .string()
+    .max(20, 'El fondo no puede exceder 20 caracteres')
+    .optional(),
+
+  tipoCieloFalso: z
+    .string()
+    .max(100, 'El tipo no puede exceder 100 caracteres')
+    .optional(),
+
+  tipoCieloFalsoOtro: z
+    .string()
+    .max(300, 'La descripción no puede exceder 300 caracteres')
+    .optional(),
+
+  fotosCieloFalso: z
+    .array(z.string().url('URL inválida'))
+    .max(5, 'Máximo 5 fotos permitidas')
     .optional(),
 }).refine(
   (data) => data.ciudad !== 'Otro' || (data.ciudadOtro && data.ciudadOtro.trim().length > 0),

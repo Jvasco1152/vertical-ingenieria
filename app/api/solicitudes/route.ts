@@ -28,6 +28,11 @@ export async function POST(req: Request) {
         nombreContacto: validatedData.nombreContacto || null,
         telefonoContacto: validatedData.telefonoContacto || null,
         requerimientoEspecial: validatedData.requerimientoEspecial || null,
+        anchoCabina: validatedData.anchoCabina || null,
+        fondoCabina: validatedData.fondoCabina || null,
+        tipoCieloFalso: validatedData.tipoCieloFalso || null,
+        tipoCieloFalsoOtro: validatedData.tipoCieloFalsoOtro || null,
+        fotosCieloFalso: validatedData.fotosCieloFalso || [],
       },
     });
 

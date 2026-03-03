@@ -6,7 +6,7 @@
 **Sector:** Diseño de interiores para ascensores
 **Objetivo:** Sistema web para que trabajadores documenten proyectos con fotos y clientes puedan seguir el progreso en tiempo real
 
-## ✅ Estado Actual del Proyecto (Actualizado 2025-12-31)
+## ✅ Estado Actual del Proyecto (Actualizado 2026-03-03)
 
 ### 🚀 Deployment en Producción
 - [x] **Aplicación desplegada en Vercel:** [https://vertical-ingenieria.vercel.app](https://vertical-ingenieria.vercel.app)
@@ -39,6 +39,7 @@
   - `ProjectPhaseLog` (historial de fases)
   - `Comment` (comentarios en proyectos) ✅ **FUNCIONAL**
   - `Notification` (notificaciones) ✅ **FUNCIONAL**
+  - `QuoteRequest` (solicitudes de cotización) ✅ **FUNCIONAL**
 
 ### Autenticación (NextAuth)
 - [x] NextAuth configurado con credentials provider
@@ -68,6 +69,9 @@
 - [x] **Clients:** ClientForm (crear/editar clientes) ✅ **NUEVO**
 - [x] **Gallery:** ImageCard (tarjeta de imagen) ✅ **NUEVO**
 - [x] **Gallery:** ImageLightbox (vista ampliada) ✅ **NUEVO**
+- [x] **QuoteRequest:** Formulario público de cotización ✅ **NUEVO**
+- [x] **QuoteRequest:** Panel admin de solicitudes ✅ **NUEVO**
+- [x] **QuoteRequest:** Vista detalle con gestión de estado ✅ **NUEVO**
 
 ### Páginas Implementadas
 - [x] `/` - Landing page con botón de login
@@ -84,6 +88,9 @@
 - [x] `/clients/new` - Crear cliente ✅ **NUEVO**
 - [x] `/clients/[id]/edit` - Editar cliente ✅ **NUEVO**
 - [x] `/gallery` - Galería de todas las imágenes ✅ **NUEVO**
+- [x] `/solicitud` - Formulario público de cotización (sin auth) ✅ **NUEVO**
+- [x] `/solicitudes` - Panel admin de solicitudes con filtros ✅ **NUEVO**
+- [x] `/solicitudes/[id]` - Detalle: estado, notas internas, crear proyecto ✅ **NUEVO**
 
 ### API Routes Implementadas
 - [x] `/api/auth/[...nextauth]` - Autenticación
@@ -99,6 +106,8 @@
 - [x] `/api/users/[id]` - GET, PUT, DELETE
 - [x] `/api/dashboard/stats` - Estadísticas del dashboard
 - [x] `/api/gallery` - Imágenes con filtros
+- [x] `/api/solicitudes` - GET (solo admin), POST (público)
+- [x] `/api/solicitudes/[id]` - GET, PATCH (solo admin)
 
 ### Datos de Prueba (Seed)
 - [x] Script de seed creado (`prisma/seed.ts`)
@@ -219,6 +228,24 @@
 - [x] Contador de proyectos por cliente
 - [x] Solo accesible para ADMIN
 
+### 10. Solicitudes de Cotización ⭐
+**Estado:** ✅ **COMPLETADO** (Feb 2026)
+
+**Implementado:**
+- [x] Formulario público en `/solicitud` (sin autenticación)
+- [x] Campos: nombre, email, teléfono, tipo de servicio, descripción, presupuesto estimado
+- [x] Validación con Zod + react-hook-form
+- [x] API POST pública — cualquier visitante puede enviar
+- [x] Panel admin en `/solicitudes` con tabla y filtros por estado
+- [x] Chips de color según estado (PENDING/REVIEWED/CONVERTED/REJECTED)
+- [x] Vista detalle en `/solicitudes/[id]` con:
+  - Selector de cambio de estado
+  - Campo de notas internas (solo admin)
+  - Botón "Crear Proyecto" desde la solicitud
+- [x] Modelo `QuoteRequest` en Prisma con enum `QuoteStatus`
+- [x] Ítem "Solicitudes" en Sidebar (adminOnly)
+- [x] Botón "Solicitar Cotización" como CTA principal en landing page
+
 ### 9. Galería de Imágenes ⭐
 **Estado:** ✅ **COMPLETADO**
 
@@ -333,6 +360,11 @@ rm -rf .next && npm run build
 - id, userId, projectId, title, message, read
 - Relaciones: user, project
 
+### QuoteRequest
+- id, name, email, phone, serviceType, description, estimatedBudget
+- status: PENDING | REVIEWED | CONVERTED | REJECTED
+- adminNotes (notas internas), createdAt, updatedAt
+
 ## 🎯 Decisiones Técnicas Tomadas
 
 1. **Next.js 15.5.9 con App Router** (downgrade de 16.1.1 por compatibilidad con Vercel)
@@ -372,10 +404,12 @@ rm -rf .next && npm run build
 17. ✅ **CVE-2025-66478 en Next.js 15.1.3** - Upgrade a Next.js 15.5.9 (versión segura)
 18. ✅ **Prisma db push colgado con pgbouncer** - Usar puerto 5432 para migraciones
 19. ✅ **Supabase connection pooling** - Puerto 6543 para app, 5432 para migraciones
+20. ✅ **Zod v4 required_error deprecado** - Reemplazado por `message` en schemas de enums
+21. ✅ **Next.js 15 params async en API routes** - `await params` en route handlers dinámicos
 
 ## 📝 Próximos Pasos Recomendados
 
-### Funcionalidades Completadas ✅ (90% del MVP)
+### Funcionalidades Completadas ✅ (100% del MVP + extras)
 - [x] Sistema de autenticación con roles
 - [x] Base de datos PostgreSQL configurada
 - [x] Sistema completo de carga de imágenes
@@ -387,6 +421,7 @@ rm -rf .next && npm run build
 - [x] Gestión de usuarios
 - [x] Gestión de clientes
 - [x] Galería de imágenes
+- [x] **Solicitudes de cotización** (formulario público + panel admin)
 
 ### Pendiente de Implementar (Opcional)
 
@@ -431,7 +466,6 @@ rm -rf .next && npm run build
 
 ## 💡 Ideas Futuras
 
-- Sistema de cotizaciones
 - Chat en tiempo real
 - Aplicación móvil (React Native)
 - Calendario de actividades
@@ -464,6 +498,7 @@ rm -rf .next && npm run build
 - **Gestión de Usuarios:** 100% ✅
 - **Gestión de Clientes:** 100% ✅
 - **Galería:** 100% ✅
+- **Solicitudes de Cotización:** 100% ✅
 - **Deployment:** 100% ✅
 
 **Progreso general del MVP: 100%** ✅
@@ -481,6 +516,7 @@ rm -rf .next && npm run build
 8. ✅ **Gestión de Usuarios** - Panel admin completo
 9. ✅ **Gestión de Clientes** - Vista especializada para clientes
 10. ✅ **Galería** - Vista unificada de todas las imágenes
+11. ✅ **Solicitudes de Cotización** - Formulario público + panel admin con gestión de estados
 
 ### Archivos Clave del Proyecto:
 - `prisma/schema.prisma` - Estructura de datos
@@ -489,14 +525,15 @@ rm -rf .next && npm run build
 - `lib/upload.ts` - Helper de upload frontend
 - `lib/validations/` - Schemas de validación Zod
 - `lib/notifications.ts` - Sistema de notificaciones
+- `lib/validations/quoteRequest.ts` - Schema Zod de solicitudes
 - `components/` - Componentes reutilizables
 - `app/` - Páginas y API routes
 - `.env.local` y `.env` - Variables de entorno
 
 ---
 
-**Última actualización:** 2025-12-31
-**Versión del proyecto:** 1.0.0
+**Última actualización:** 2026-03-03
+**Versión del proyecto:** 1.1.0
 **Estado:** ✅ **DESPLEGADO EN PRODUCCIÓN**
 **URL:** [https://vertical-ingenieria.vercel.app](https://vertical-ingenieria.vercel.app)
 **Stack:** Next.js 15.5.9 + React 18.3.1 + PostgreSQL (Supabase) + Vercel

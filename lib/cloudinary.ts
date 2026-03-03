@@ -36,6 +36,28 @@ export function generateUploadSignature() {
 }
 
 /**
+ * Genera una firma para upload público desde formularios sin autenticación.
+ * Usa la carpeta 'vertical_quote_requests' para separar estos uploads.
+ */
+export function generatePublicUploadSignature() {
+  const timestamp = Math.round(new Date().getTime() / 1000);
+  const folder = 'vertical_quote_requests';
+
+  const signature = cloudinary.utils.api_sign_request(
+    { timestamp, folder },
+    process.env.CLOUDINARY_API_SECRET!
+  );
+
+  return {
+    signature,
+    timestamp,
+    folder,
+    cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+    apiKey: process.env.CLOUDINARY_API_KEY,
+  };
+}
+
+/**
  * Elimina una imagen de Cloudinary
  * @param publicId - Public ID de la imagen en Cloudinary
  * @returns Resultado de la operación de eliminación

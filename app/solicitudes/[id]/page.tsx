@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowLeft, Save, ExternalLink } from 'lucide-react';
 
 type QuoteStatus = 'PENDING' | 'REVIEWED' | 'CONVERTED' | 'REJECTED';
@@ -21,6 +22,11 @@ interface QuoteRequest {
   nombreContacto: string | null;
   telefonoContacto: string | null;
   requerimientoEspecial: string | null;
+  anchoCabina: string | null;
+  fondoCabina: string | null;
+  tipoCieloFalso: string | null;
+  tipoCieloFalsoOtro: string | null;
+  fotosCieloFalso: string[];
   status: QuoteStatus;
   adminNotes: string | null;
   createdAt: string;
@@ -187,6 +193,48 @@ export default function SolicitudDetailPage() {
             </div>
           )}
         </div>
+
+        {/* Sección Cielo Falso */}
+        {solicitud.tipoCotizacion === 'Cambio de cielo falso' && (
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <h2 className="text-base font-semibold text-gray-900 mb-4">Detalles — Cambio de Cielo Falso</h2>
+            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Field label="Ancho de cabina (mm)" value={solicitud.anchoCabina} />
+              <Field label="Fondo de cabina (mm)" value={solicitud.fondoCabina} />
+              <Field label="Tipo de cielo falso" value={solicitud.tipoCieloFalso} />
+              {solicitud.tipoCieloFalso === 'Otro' && (
+                <Field label="Especificación del tipo" value={solicitud.tipoCieloFalsoOtro} />
+              )}
+            </dl>
+
+            {solicitud.fotosCieloFalso && solicitud.fotosCieloFalso.length > 0 && (
+              <div className="mt-4 pt-4 border-t border-gray-100">
+                <dt className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
+                  Fotos del cielo falso actual ({solicitud.fotosCieloFalso.length})
+                </dt>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {solicitud.fotosCieloFalso.map((url, i) => (
+                    <a
+                      key={i}
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="relative aspect-square rounded-lg overflow-hidden border border-gray-200 hover:opacity-90 transition-opacity group"
+                    >
+                      <Image
+                        src={url}
+                        alt={`Foto cielo falso ${i + 1}`}
+                        fill
+                        className="object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Panel de administración */}
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
