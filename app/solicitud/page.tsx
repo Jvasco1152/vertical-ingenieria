@@ -91,9 +91,7 @@ export default function SolicitudPage() {
   });
 
   const ciudadValue = watch('ciudad');
-  const tipoCotizacion = watch('tipoCotizacion');
   const tipoCieloFalsoValue = watch('tipoCieloFalso');
-  const esCieloFalso = tipoCotizacion === 'Cambio de cielo falso';
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -158,7 +156,7 @@ export default function SolicitudPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...data,
-          fotosCieloFalso: esCieloFalso ? cieloFalsoPhotos : [],
+          fotosCieloFalso: cieloFalsoPhotos,
         }),
       });
 
@@ -350,9 +348,8 @@ export default function SolicitudPage() {
               )}
             </div>
 
-            {/* ─── SECCIÓN CIELO FALSO (condicional) ─── */}
-            {esCieloFalso && (
-              <div className="border border-blue-100 bg-blue-50/40 rounded-xl p-5 space-y-6">
+            {/* ─── SECCIÓN CIELO FALSO ─── */}
+            <div className="border border-blue-100 bg-blue-50/40 rounded-xl p-5 space-y-6">
                 <div>
                   <h3 className="text-sm font-semibold text-blue-800 uppercase tracking-wide mb-0.5">
                     Cambio de Cielo Falso
@@ -556,7 +553,6 @@ export default function SolicitudPage() {
                   )}
                 </div>
               </div>
-            )}
 
             {/* Descripción del requerimiento */}
             <div>
