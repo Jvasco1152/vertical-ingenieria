@@ -12,28 +12,78 @@ import { z } from 'zod';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const validatedData = createQuoteRequestSchema.parse(body);
+    const validated = createQuoteRequestSchema.parse(body);
 
     const quoteRequest = await prisma.quoteRequest.create({
       data: {
-        email: validatedData.email,
-        tipoCliente: validatedData.tipoCliente,
-        obraEdificio: validatedData.obraEdificio,
-        direccion: validatedData.direccion,
-        ciudad: validatedData.ciudad,
-        ciudadOtro: validatedData.ciudadOtro || null,
-        quienSolicita: validatedData.quienSolicita || null,
-        descripcion: validatedData.descripcion,
-        tipoCotizacion: validatedData.tipoCotizacion,
-        tipoCotizacionOtro: validatedData.tipoCotizacionOtro || null,
-        nombreContacto: validatedData.nombreContacto || null,
-        telefonoContacto: validatedData.telefonoContacto || null,
-        requerimientoEspecial: validatedData.requerimientoEspecial || null,
-        anchoCabina: validatedData.anchoCabina || null,
-        fondoCabina: validatedData.fondoCabina || null,
-        tipoCieloFalso: validatedData.tipoCieloFalso || null,
-        tipoCieloFalsoOtro: validatedData.tipoCieloFalsoOtro || null,
-        fotosCieloFalso: validatedData.fotosCieloFalso || [],
+        // Sección 1
+        email: validated.email,
+        tipoCliente: validated.tipoCliente,
+        tipoClienteOtro: validated.tipoClienteOtro ?? null,
+        obraEdificio: validated.obraEdificio,
+        direccion: validated.direccion,
+        ciudad: validated.ciudad,
+        ciudadOtro: validated.ciudadOtro ?? null,
+        quienSolicita: validated.quienSolicita ?? null,
+        nombreContacto: validated.nombreContacto ?? null,
+        telefonoContacto: validated.telefonoContacto ?? null,
+        emailContacto: validated.emailContacto ?? null,
+        tipoCotizacion: validated.tipoCotizacion,
+        tipoCotizacionOtro: validated.tipoCotizacionOtro ?? null,
+        requerimientoEspecial: validated.requerimientoEspecial ?? null,
+        requerimientoEspecialOtro: validated.requerimientoEspecialOtro ?? null,
+
+        // Compartidos
+        anchoCabina: validated.anchoCabina ?? null,
+        fondoCabina: validated.fondoCabina ?? null,
+
+        // Sección 2
+        altoCabina: validated.altoCabina ?? null,
+        tipoPuertaCabina: validated.tipoPuertaCabina ?? null,
+        tipoPuertaCabinaOtro: validated.tipoPuertaCabinaOtro ?? null,
+        anchoPuertaCabina: validated.anchoPuertaCabina ?? null,
+        altoPuertaCabina: validated.altoPuertaCabina ?? null,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        itemsCotizar: (validated.itemsCotizar ?? undefined) as any,
+        descripcionRestauracion: validated.descripcionRestauracion ?? null,
+        fotosRestauracion: validated.fotosRestauracion ?? [],
+        tipoCieloFalso: validated.tipoCieloFalso ?? null,
+        tipoCieloFalsoOtro: validated.tipoCieloFalsoOtro ?? null,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        tipoEspejo: (validated.tipoEspejo ?? undefined) as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        acabadoPaneles: (validated.acabadoPaneles ?? undefined) as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        tipoPiso: (validated.tipoPiso ?? undefined) as any,
+        pisoBaseAdicional: validated.pisoBaseAdicional ?? null,
+        problemasPiso: validated.problemasPiso ?? [],
+
+        // Sección 3
+        descripcionCieloFalso: validated.descripcionCieloFalso ?? null,
+        fotosCieloFalso: validated.fotosCieloFalso ?? [],
+
+        // Sección 4
+        descripcionPisoOpcional: validated.descripcionPisoOpcional ?? null,
+        descripcionPiso: validated.descripcionPiso ?? null,
+        fotosPiso: validated.fotosPiso ?? [],
+
+        // Sección 5
+        numPisos: validated.numPisos ?? null,
+        tipoPuertasPiso: validated.tipoPuertasPiso ?? [],
+        tipoPuertasPisoOtro: validated.tipoPuertasPisoOtro ?? null,
+        tipoMarco: validated.tipoMarco ?? null,
+        tipoMarcoOtro: validated.tipoMarcoOtro ?? null,
+        acabadoPuertasLobby: validated.acabadoPuertasLobby ?? null,
+        acabadoPuertasLobbyOtro: validated.acabadoPuertasLobbyOtro ?? null,
+        acabadoPuertasOtrosPisos: validated.acabadoPuertasOtrosPisos ?? null,
+        acabadoPuertasOtrosOtro: validated.acabadoPuertasOtrosOtro ?? null,
+        descripcionPuertas: validated.descripcionPuertas ?? null,
+        fotosPuertas: validated.fotosPuertas ?? [],
+
+        // Sección 6
+        descripcionOtro: validated.descripcionOtro ?? null,
+        descripcionOtroReq: validated.descripcionOtroReq ?? null,
+        fotosOtro: validated.fotosOtro ?? [],
       },
     });
 
@@ -68,7 +118,7 @@ export async function GET(req: Request) {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || !session.user) {
+    if (!session?.user) {
       return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
     }
 
@@ -79,7 +129,7 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const status = searchParams.get('status');
 
-    const where: any = {};
+    const where: Record<string, unknown> = {};
     if (status && status !== 'ALL') {
       where.status = status;
     }
@@ -91,6 +141,7 @@ export async function GET(req: Request) {
         id: true,
         email: true,
         tipoCliente: true,
+        tipoClienteOtro: true,
         obraEdificio: true,
         ciudad: true,
         ciudadOtro: true,

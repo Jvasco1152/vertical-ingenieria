@@ -143,30 +143,81 @@ enum QuoteStatus {
 }
 
 model QuoteRequest {
-  id                    String      @id @default(cuid())
-  email                 String
-  tipoCliente           String
-  obraEdificio          String
-  direccion             String
-  ciudad                String
-  ciudadOtro            String?
-  quienSolicita         String?
-  descripcion           String
-  tipoCotizacion        String
-  tipoCotizacionOtro    String?
-  nombreContacto        String?
-  telefonoContacto      String?
-  requerimientoEspecial String?
-  // Campos específicos para Cambio de Cielo Falso
-  anchoCabina           String?
-  fondoCabina           String?
-  tipoCieloFalso        String?
-  tipoCieloFalsoOtro    String?
-  fotosCieloFalso       String[]
-  status                QuoteStatus @default(PENDING)
-  adminNotes            String?
-  createdAt             DateTime    @default(now())
-  updatedAt             DateTime    @updatedAt
+  id                        String      @id @default(cuid())
+
+  // Sección 1 — Datos generales
+  email                     String
+  tipoCliente               String
+  tipoClienteOtro           String?
+  obraEdificio              String
+  direccion                 String
+  ciudad                    String
+  ciudadOtro                String?
+  quienSolicita             String?
+  nombreContacto            String?
+  telefonoContacto          String?
+  emailContacto             String?
+  tipoCotizacion            String
+  tipoCotizacionOtro        String?
+  requerimientoEspecial     String?       // opciones separadas por coma
+  requerimientoEspecialOtro String?
+  descripcion               String?       // campo legacy, ahora opcional
+
+  // Compartidos entre secciones (medidas de cabina)
+  anchoCabina               String?
+  fondoCabina               String?
+
+  // Sección 2 — Restauración completa de cabina
+  altoCabina                String?
+  tipoPuertaCabina          String?
+  tipoPuertaCabinaOtro      String?
+  anchoPuertaCabina         String?
+  altoPuertaCabina          String?
+  itemsCotizar              Json?         // { [item]: 'Nuevo'|'Reforma'|'Se conserva'|'N/A' }
+  descripcionRestauracion   String?
+  fotosRestauracion         String[]      @default([])
+  tipoEspejo                Json?         // { [tipo]: { pasamanosTecho: bool, pisoTecho: bool } }
+  acabadoPaneles            Json?         // { [material]: { antes: bool, aCotizar: bool } }
+
+  // Compartidos entre S2 y S4 (cielo falso y piso)
+  tipoCieloFalso            String?
+  tipoCieloFalsoOtro        String?
+  tipoPiso                  Json?         // { [material]: { actual: bool, aCotizar: bool } }
+  pisoBaseAdicional         String?
+  problemasPiso             String[]      @default([])
+
+  // Sección 3 — Cambio de cielo falso
+  descripcionCieloFalso     String?
+  fotosCieloFalso           String[]      @default([])
+
+  // Sección 4 — Cambio de piso
+  descripcionPisoOpcional   String?
+  descripcionPiso           String?
+  fotosPiso                 String[]      @default([])
+
+  // Sección 5 — Restauración puertas de piso
+  numPisos                  String?
+  tipoPuertasPiso           String[]      @default([])
+  tipoPuertasPisoOtro       String?
+  tipoMarco                 String?
+  tipoMarcoOtro             String?
+  acabadoPuertasLobby       String?
+  acabadoPuertasLobbyOtro   String?
+  acabadoPuertasOtrosPisos  String?
+  acabadoPuertasOtrosOtro   String?
+  descripcionPuertas        String?
+  fotosPuertas              String[]      @default([])
+
+  // Sección 6 — Requerimiento especial / Otros
+  descripcionOtro           String?
+  descripcionOtroReq        String?
+  fotosOtro                 String[]      @default([])
+
+  // Admin
+  status                    QuoteStatus   @default(PENDING)
+  adminNotes                String?
+  createdAt                 DateTime      @default(now())
+  updatedAt                 DateTime      @updatedAt
 
   @@map("quote_requests")
 }
